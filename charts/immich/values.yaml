@@ -25,7 +25,11 @@ immich:
     library:
       # Automatically creating the library volume is not supported by this chart
       # You have to specify an existing PVC to use
-      existingClaim:
+      existingClaim: immich-lib-pv-claim
+    thumbnail:
+      existingClaim: immich-thum-pv-claim
+
+
   # configuration is immich-config.json converted to yaml
   # ref: https://immich.app/docs/install/config-file/
   #
@@ -40,7 +44,7 @@ immich:
 # Dependencies
 
 postgresql:
-  enabled: false
+  enabled: true
   image:
     repository: tensorchord/pgvecto-rs
     tag: pg14-v0.2.0
@@ -59,7 +63,7 @@ postgresql:
           CREATE EXTENSION vectors;
 
 redis:
-  enabled: false
+  enabled: true
   architecture: standalone
   auth:
     enabled: false
@@ -90,7 +94,7 @@ microservices:
     pullPolicy: IfNotPresent
 
 machine-learning:
-  enabled: true
+  enabled: false
   image:
     repository: ghcr.io/immich-app/immich-machine-learning
     pullPolicy: IfNotPresent
@@ -99,7 +103,7 @@ machine-learning:
   persistence:
     cache:
       enabled: true
-      size: 10Gi
+      size: 10Mi
       # Optional: Set this to pvc to avoid downloading the ML models every start.
       type: emptyDir
       accessMode: ReadWriteMany
